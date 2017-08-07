@@ -1,4 +1,6 @@
 var express = require('express');
+var jwt = require('jsonwebtoken');
+var config = require('../config.js')
 var User = require('../model/User');
 
 var router = express.Router();
@@ -19,7 +21,30 @@ router.post('/register', function(req, res){
 
 // Get token for the user
 router.post('/authenticate', function(req, res){
-    res.send('POST');
+    User.findOne({
+        username: req.body.username,
+        password: req.body.password
+    }, function(err, user){
+        if(err) throw err;
+
+        if(!user){
+            res.json({
+                success: false,
+                message: 'Gagal mendapatkan token!'
+            });
+        } else {
+            // Generation a token
+            var token = jwt.sign(user, config.SECRET, {
+                expiresIn: '1h' // Expire in an hour
+            });
+
+            res.json({
+                success: true,
+                message: "Berhasil mendapatkan token!",
+                token: token
+            });
+        }
+    });
 });
 
 // Retrieving all available user
