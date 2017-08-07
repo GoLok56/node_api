@@ -33,10 +33,12 @@ router.post('/authenticate', function(req, res){
                 message: 'Gagal mendapatkan token!'
             });
         } else {
-            // Generation a token
-            var token = jwt.sign(user, config.SECRET, {
-                expiresIn: '1h' // Expire in an hour
-            });
+            // Generating a token
+            var token = jwt.sign(
+                user,
+                config.SECRET,
+                { expiresIn: '1h' }
+            );
 
             res.json({
                 success: true,
@@ -47,9 +49,39 @@ router.post('/authenticate', function(req, res){
     });
 });
 
+// Verifying the token
+router.use(function(req, res, next){
+    var token = req.body.token || req.query.token || req.headers['x-access-token'];
+
+    if (token) {
+        jwt.verify(token, config.SECRET, function(err, decoded) {
+        if (err) {
+            return res.json({
+                success: false,
+                message: 'Terjadi kesalahan.'
+            });
+        } else {
+            req.decoded = decoded;
+            console.log(req.decoded);
+            next();
+        }
+    });
+
+    } else {
+        return res.status(403).send({
+            success: false,
+            message: 'Token tidak ditemukan!'
+        });
+    }
+});
+
 // Retrieving all available user
 router.get('/user', function(req, res){
-    res.send("GET");
+    User.find({}, function(err, users){
+        if(err) throw err;
+
+        res.json(users);
+    });
 });
 
 // Updating the user info
