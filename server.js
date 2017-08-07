@@ -7,7 +7,7 @@ var config = require('./config');
 var app = express();
 
 // Connecting to database
-mongoose.createConnection(config.DATABASE, {useMongoClient: true});
+mongoose.connect(config.DATABASE);
 
 // Setting up the middleware
 app.use(bodyParser.urlencoded({ extended: false }));
