@@ -86,7 +86,16 @@ router.get('/user', function(req, res){
 
 // Updating the user info
 router.put('/user/:id', function(req, res){
-    res.send('PUT');
+    User.findByIdAndUpdate(req.params.id, {
+        name: req.body.name,
+        username: req.body.username,
+        password: req.body.password,
+        email: req.body.email
+    }, {new: true}, function(err, user){
+        if(err) throw err
+
+        res.json({ data: user });
+    });
 });
 
 // Delete the user
