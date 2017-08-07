@@ -5,4 +5,4 @@ router.get('/', function(req, res){
     res.send("GAY GAY GAY GAY GAY GAY");
 });
 
-module.export = router;
+module.exports = router;
