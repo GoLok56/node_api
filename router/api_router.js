@@ -91,7 +91,14 @@ router.put('/user/:id', function(req, res){
 
 // Delete the user
 router.delete('/user/:id', function(req, res){
-    res.send('DELETE');
+    User.remove({ _id: req.params.id }, function(err, removed){
+        if(err) throw err;
+
+        res.json({
+            success: true,
+            deleted: removed.result.n
+        });
+    });
 });
 
 module.exports = router;
