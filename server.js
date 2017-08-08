@@ -14,6 +14,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use('/api', require('./router/api_router'));
 
+app.get("/", function(req, res){
+    res.send("Selamat datang di Web API...");
+});
+
 // Starting the server
 app.listen(config.PORT);
 console.log('Server is running...');
