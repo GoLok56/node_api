@@ -100,12 +100,11 @@ router.put('/user/:id', function(req, res){
 
 // Delete the user
 router.delete('/user/:id', function(req, res){
-    User.remove({ _id: req.params.id }, function(err, removed){
+    User.findByIdAndRemove(req.params.id, function(err, removed){
         if(err) throw err;
 
         res.json({
-            success: true,
-            deleted: removed.result.n
+            data: removed
         });
     });
 });
